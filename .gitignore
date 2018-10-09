@@ -1,0 +1,13 @@
+informe/*.aux
+informe/*.lof
+informe/*.log
+informe/*.lot
+informe/*.fls
+informe/*.out
+informe/*.toc
+informe/*.fmt
+informe/*.fot
+informe/*.cb
+informe/*.cb2
+informe/*.pdf
+build/
