@@ -10,7 +10,7 @@ int main(){
 	g.new_node(n);
 	for(int i = 0; i<n ; i++){
 		std::cin >> x >> y; 
-		Cordenadas cor = Cordenadas();
+		Coordenadas cor = Coordenadas();
 		cor.x = x;
 		cor.y = y;
 		(g.puntos()).push_back(cor);

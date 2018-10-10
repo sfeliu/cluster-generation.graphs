@@ -5,32 +5,32 @@ Grafo::Grafo(){
 }
 
 
-Grafo::~Grafo(){
-	for(int i =0; i < vertices.size(); i++){
-		for(int j=0;j < vertices[i].size(); j++)
-			delete vertices[i][j];		
-	}
-}
+// Grafo::~Grafo(){
+// 	for(int i =0; i < vertices.size(); i++){
+// 		for(int j=0;j < vertices[i].size(); j++)
+// 			delete vertices[i][j];		
+// 	}
+// }
 
 void Grafo::new_node(){
-	std::vector<node*> v;
+	std::vector<Node>v;
 	vertices.push_back(v);
 }
 
 
 void Grafo::new_node(int n){
 	for(int i = 0; i < n; i++){
-		std::vector<node*> v;
+		std::vector<Node> v;
 		vertices.push_back(v);
 	}
 }
 
 
 bool Grafo::existe(int u, int v){
-	std::vector<node*> it = vertices[u];
+	// std::vector<Node> it = vertices[u];
 	bool yaExiste = false;
-	for(int i=0; i<it.size(); i++){
-		if(it[i]->id == v){
+	for(int i=0; i<vertices[u].size(); i++){
+		if(vertices[u][i].id == v){
 			return true;
 		}
 	}
@@ -50,23 +50,23 @@ void Grafo::add_edge(int u, int v, double w){
 	if(u > vertices.size()-1 || v > vertices.size()-1 || existe(u,v)){
 		return;
 	}
-	node* nuevo_1 = new node;
-	nuevo_1->id = v;
-	nuevo_1->weight = w;
+	Node nuevo_1 = Node();
+	nuevo_1.id = v;
+	nuevo_1.weight = w;
 	(vertices[u]).push_back(nuevo_1);
 
-	node* nuevo_2 = new node;
-	nuevo_2->id = u;
-	nuevo_2->weight = w;
+	Node nuevo_2 = Node();
+	nuevo_2.id = u;
+	nuevo_2.weight = w;
 	(vertices[v]).push_back(nuevo_2);
 }
 
 void Grafo::imprimir(){
 	std::cout<< std::endl << "imprimiendo grafo..."<< std::endl;
-	for(int i = 0;i < vertices.size();i++){
-		std::vector<node*> it = vertices[i];
-		for(int j = 0; j< it.size(); j++){
-			std::cout<< "(" << i << "-->" << it[j]->id << ") ";
+	for(int i = 0; i < vertices.size();i++){
+		// std::vector<Node> it = vertices[i];
+		for(int j = 0; j< vertices[i].size(); j++){
+			std::cout<< "(" << i << "-->" << vertices[i][j].id << ") ";
 		}
 		std::cout << std::endl;
 	}
@@ -113,7 +113,7 @@ listAristas Grafo::kruskal(){
 	for(int i = vertices.size()-1; i >= 0; i--){
 		for(int j = vertices[i].size()-1; j >= 0; j--){
 			vertices[i].erase(vertices[i].begin() + j);
-			aristas.push_back(std::tuple<int,int,double>(i,(vertices[i][j])->id,(vertices[i][j])->weight));
+			aristas.push_back(std::tuple<int,int,double>(i,(vertices[i][j]).id,(vertices[i][j]).weight));
 		}
 	}
 	sort(aristas.begin(),aristas.end(), porPeso);
@@ -283,6 +283,6 @@ void Grafo::imprimir_pos(){
 	return promedio;
 }*/
 
-std::vector<Cordenadas>& Grafo::puntos(){
+std::vector<Coordenadas>& Grafo::puntos(){
 	return _puntos;
 }
