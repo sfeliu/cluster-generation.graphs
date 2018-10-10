@@ -1,4 +1,6 @@
 informe/*.aux
+informe/*.gz
+informe/*.fdb_latexmk
 informe/*.lof
 informe/*.log
 informe/*.lot
