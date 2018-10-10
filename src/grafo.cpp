@@ -4,33 +4,24 @@
 Grafo::Grafo(){
 }
 
-
-// Grafo::~Grafo(){
-// 	for(int i =0; i < vertices.size(); i++){
-// 		for(int j=0;j < vertices[i].size(); j++)
-// 			delete vertices[i][j];		
-// 	}
-// }
-
 void Grafo::new_node(){
 	std::vector<Node>v;
-	vertices.push_back(v);
+	_vertices.push_back(v);
 }
 
 
 void Grafo::new_node(int n){
 	for(int i = 0; i < n; i++){
 		std::vector<Node> v;
-		vertices.push_back(v);
+		_vertices.push_back(v);
 	}
 }
 
 
 bool Grafo::existe(int u, int v){
-	// std::vector<Node> it = vertices[u];
 	bool yaExiste = false;
-	for(int i=0; i<vertices[u].size(); i++){
-		if(vertices[u][i].id == v){
+	for(int i=0; i <  _vertices[u].size(); i++){
+		if(_vertices[u][i].id == v){
 			return true;
 		}
 	}
@@ -38,35 +29,34 @@ bool Grafo::existe(int u, int v){
 }
 
 void Grafo::borrar_edge(int u, int v){
-	if(u > vertices.size()-1 || v > vertices.size()-1){
+	if(u > _vertices.size()-1 || v > _vertices.size()-1){
 		return;
 	}
-	vertices[u].erase(vertices[u].begin()+v);
-	vertices[v].erase(vertices[v].begin()+u);
+	_vertices[u].erase(_vertices[u].begin()+v);
+	_vertices[v].erase(_vertices[v].begin()+u);
 
 }
 
 void Grafo::add_edge(int u, int v, double w){
-	if(u > vertices.size()-1 || v > vertices.size()-1 || existe(u,v)){
+	if(u > _vertices.size()-1 || v > _vertices.size()-1 || existe(u,v)){
 		return;
 	}
 	Node nuevo_1 = Node();
 	nuevo_1.id = v;
 	nuevo_1.weight = w;
-	(vertices[u]).push_back(nuevo_1);
+	(_vertices[u]).push_back(nuevo_1);
 
 	Node nuevo_2 = Node();
 	nuevo_2.id = u;
 	nuevo_2.weight = w;
-	(vertices[v]).push_back(nuevo_2);
+	(_vertices[v]).push_back(nuevo_2);
 }
 
 void Grafo::imprimir(){
 	std::cout<< std::endl << "imprimiendo grafo..."<< std::endl;
-	for(int i = 0; i < vertices.size();i++){
-		// std::vector<Node> it = vertices[i];
-		for(int j = 0; j< vertices[i].size(); j++){
-			std::cout<< "(" << i << "-->" << vertices[i][j].id << ") ";
+	for(int i = 0; i < _vertices.size();i++){
+		for(int j = 0; j< _vertices[i].size(); j++){
+			std::cout<< "(" << i << "-->" << _vertices[i][j].id << ") ";
 		}
 		std::cout << std::endl;
 	}
@@ -80,29 +70,29 @@ bool porPeso(std::tuple<int,int,double> a, std::tuple<int,int,double> b){
 
 
 void Grafo::init_kruskal(){
-	for(int i = 0; i<(vertices).size(); i++){
-		padre.push_back(i);
-		altura.push_back(1);
+	for(int i = 0; i<(_vertices).size(); i++){
+		_padre.push_back(i);
+		_altura.push_back(1);
 	}
 }
 
 int Grafo::find(int id){
-	if(padre[id] != id){
-		return find(padre[id]);
+	if(_padre[id] != id){
+		return find(_padre[id]);
 	}
-	return padre[id];
+	return _padre[id];
 }
 
 void Grafo::conjunction(int u, int v){
 	int x = find(u);
 	int y = find(v);
-	if(altura[x] < altura[y]){
-		padre[x] = y;
+	if(_altura[x] < _altura[y]){
+		_padre[x] = y;
 	}else{
-		padre[y] = x;
+		_padre[y] = x;
 	}
-	if(altura[x] == altura[y]){
-		altura[x] = altura[x]+1;
+	if(_altura[x] == _altura[y]){
+		_altura[x] = _altura[x]+1;
 	}
 }
 
@@ -110,10 +100,10 @@ listAristas Grafo::kruskal(){
 	init_kruskal();
 	listAristas aristas;
 	listAristas agm;
-	for(int i = vertices.size()-1; i >= 0; i--){
-		for(int j = vertices[i].size()-1; j >= 0; j--){
-			vertices[i].erase(vertices[i].begin() + j);
-			aristas.push_back(std::tuple<int,int,double>(i,(vertices[i][j]).id,(vertices[i][j]).weight));
+	for(int i = _vertices.size()-1; i >= 0; i--){
+		for(int j = _vertices[i].size()-1; j >= 0; j--){
+			_vertices[i].erase(_vertices[i].begin() + j);
+			aristas.push_back(std::tuple<int,int,double>(i,(_vertices[i][j]).id,(_vertices[i][j]).weight));
 		}
 	}
 	sort(aristas.begin(),aristas.end(), porPeso);

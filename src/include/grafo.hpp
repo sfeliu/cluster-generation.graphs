@@ -15,7 +15,7 @@
 #include <math.h>
 
 
-struct Cordenadas
+struct Coordenadas
 	{
 	// public:
 		double x;
@@ -26,7 +26,7 @@ typedef std::vector< std::tuple <int,int,double> > listAristas;
 
 class Grafo
 {
-	struct node
+	struct Node
 	{
 		double weight;
 		int id;
@@ -35,9 +35,8 @@ class Grafo
 	
 
 	public:
-		std::vector<Cordenadas>& puntos();
+		std::vector<Coordenadas>& puntos();
 		Grafo();
-		~Grafo();
 		bool existe(int u, int v);
 		void imprimir();
 		void new_node();
@@ -54,11 +53,12 @@ class Grafo
 		// double promedio_vecinos(listAristas l, int u, int v, int diametro);
 
 	private:
-		std::vector<int> padre;
-		std::vector<int> altura;
-		std::vector< std::vector<node*> > vertices;
+		std::vector<int> _padre;
+		std::vector<int> _altura;
+		std::vector< std::vector<Node> > _vertices;
+		std::vector<Coordenadas> _puntos;
 
-		std::vector<Cordenadas> _puntos;
+		// bool porPeso(std::tuple<int,int,double> a, std::tuple<int,int,double> b);
 
 };
 
