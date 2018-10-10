@@ -10,16 +10,16 @@ int main(){
 	g.new_node(n);
 	for(int i = 0; i<n ; i++){
 		std::cin >> x >> y; 
-		Cordenadas* cor = new Cordenadas;
-		cor->x = x;
-		cor->y = y;
-		(g.puntos).push_back(cor);
+		Cordenadas cor = Cordenadas();
+		cor.x = x;
+		cor.y = y;
+		(g.puntos()).push_back(cor);
 	}
 	for(int i = 0; i<n ; i++){
 		for(int j = 0; j<n; j++){
 			if(i != j ){
-				double diff_x = abs(g.puntos[i]->x)-abs(g.puntos[j]->x);
-				double diff_y = abs(g.puntos[i]->y)-abs(g.puntos[j]->y);
+				double diff_x = abs(g.puntos()[i].x)-abs(g.puntos()[j].x);
+				double diff_y = abs(g.puntos()[i].y)-abs(g.puntos()[j].y);
 				double peso = sqrt(diff_x*diff_x + diff_y*diff_y);
 				g.add_edge(i,j,peso);
 			}

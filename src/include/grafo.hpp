@@ -15,9 +15,9 @@
 #include <math.h>
 
 
-class Cordenadas
+struct Cordenadas
 	{
-	public:
+	// public:
 		double x;
 		double y;	
 	};
@@ -35,7 +35,7 @@ class Grafo
 	
 
 	public:
-		std::vector<Cordenadas*> puntos;
+		std::vector<Cordenadas>& puntos();
 		Grafo();
 		~Grafo();
 		bool existe(int u, int v);
@@ -57,6 +57,8 @@ class Grafo
 		std::vector<int> padre;
 		std::vector<int> altura;
 		std::vector< std::vector<node*> > vertices;
+
+		std::vector<Cordenadas> _puntos;
 
 };
 

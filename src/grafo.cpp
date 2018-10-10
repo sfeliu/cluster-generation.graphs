@@ -263,8 +263,8 @@ void imprimir_agm(listAristas l){
 void Grafo::imprimir_pos(){
 	std::cout<< "imprimiendo cordenadas..."<<std::endl;
 	std::cout<< "{ ";
-	for(int i = 0; i< puntos.size(); i++){
-		std::cout<<"("<< puntos[i]->x << ", "<< puntos[i]->y << ") ";
+	for(int i = 0; i< puntos().size(); i++){
+		std::cout<<"("<< puntos()[i].x << ", "<< puntos()[i].y << ") ";
 	}
 	std::cout << "}" <<std::endl;
 }
@@ -283,4 +283,6 @@ void Grafo::imprimir_pos(){
 	return promedio;
 }*/
 
-
+std::vector<Cordenadas>& Grafo::puntos(){
+	return _puntos;
+}
