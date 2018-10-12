@@ -46,12 +46,15 @@ class Grafo
 	public:
 		std::vector<Coordenadas>& puntos();
 		Grafo();
+		Grafo(std::vector<Coordenadas> puntos); // constructor de grafo Kn con coordenadas
+		Grafo(std::vector<std::vector<double>> pesos); // constructor de grafo Kn con matriz de pesos
 		bool existe(int u, int v);
 		void imprimir();
 		void new_node();
 		void new_node(int n);
 		void borrar_edge(int u, int v);
 		void add_edge(int u, int v, double weight);
+		void add_directional_edge(int u, int v, double weight);
 		void conjunction_pc(int u, int v);
 		int find_pc(int id);
 		void init_kruskal_pc();

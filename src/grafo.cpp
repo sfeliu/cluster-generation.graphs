@@ -10,6 +10,33 @@ void Grafo::new_node(){
 }
 
 
+Grafo::Grafo(std::vector<Coordenadas> puntos) {
+    unsigned long n = puntos.size();
+    this->new_node(n);
+    for(int i = 0; i<n ; i++){
+        for(int j = 0; j<n; j++){
+            if(i != j ){
+                double diff_x = abs(puntos[i].x)-abs(puntos[j].x);
+                double diff_y = abs(puntos[i].y)-abs(puntos[j].y);
+                double peso = sqrt(diff_x*diff_x + diff_y*diff_y);
+                this->add_edge(i,j,peso);
+            }
+        }
+    }
+}
+
+
+Grafo::Grafo(std::vector<std::vector<double>> pesos) {
+    unsigned long n = pesos.size();
+    this->new_node(n);
+    for(int i = 0; i<n ; i++){
+        for(int j = 0; j<n; j++){
+            this->add_directional_edge(i,j,pesos[i][j]);
+        }
+    }
+}
+
+
 void Grafo::new_node(int n){
 	for(int i = 0; i < n; i++){
 		std::vector<Node> v;
@@ -35,6 +62,16 @@ void Grafo::borrar_edge(int u, int v){
 	_vertices[u].erase(_vertices[u].begin()+v);
 	_vertices[v].erase(_vertices[v].begin()+u);
 
+}
+
+void Grafo::add_directional_edge(int u, int v, double w){
+	if(u > _vertices.size()-1 || v > _vertices.size()-1 || existe(u,v)){
+		return;
+	}
+	Node nuevo_1 = Node();
+	nuevo_1.id = v;
+	nuevo_1.weight = w;
+	(_vertices[u]).push_back(nuevo_1);
 }
 
 void Grafo::add_edge(int u, int v, double w){
