@@ -69,21 +69,21 @@ bool porPeso(std::tuple<int,int,double> a, std::tuple<int,int,double> b){
 }
 
 
-void Grafo::init_kruskal(){
+void Grafo::init_kruskal_pc(){
 	for(int i = 0; i<(_vertices).size(); i++){
 		_padre.push_back(i);
 		_altura.push_back(1);
 	}
 }
 
-int Grafo::find(int id){
+int Grafo::find_pc(int id){
 	if(_padre[id] != id){
-		return find(_padre[id]);
+		_padre[id] = find(_padre[id]);
 	}
 	return _padre[id];
 }
 
-void Grafo::conjunction(int u, int v){
+void Grafo::conjunction_pc(int u, int v){
 	int x = find(u);
 	int y = find(v);
 	if(_altura[x] < _altura[y]){
@@ -96,16 +96,53 @@ void Grafo::conjunction(int u, int v){
 	}
 }
 
-listAristas Grafo::kruskal(){
-	init_kruskal();
+listAristas Grafo::convert(){
 	listAristas aristas;
-	listAristas agm;
 	for(int i = _vertices.size()-1; i >= 0; i--){
 		for(int j = _vertices[i].size()-1; j >= 0; j--){
 			_vertices[i].erase(_vertices[i].begin() + j);
 			aristas.push_back(std::tuple<int,int,double>(i,(_vertices[i][j]).id,(_vertices[i][j]).weight));
 		}
 	}
+	return aristas;
+
+}
+
+listAristas Grafo::kruskal_pc(listAristas aristas){
+	init_kruskal_pc();
+	listAristas agm;
+	sort(aristas.begin(),aristas.end(), porPeso);
+	for(int j = 0; j < aristas.size(); j++){
+		if( find_pc(std::get<0>(aristas[j])) != find_pc(std::get<1>(aristas[j])) ){
+			agm.push_back(aristas[j]);
+			conjunction_pc(std::get<0>(aristas[j]),std::get<1>(aristas[j]));
+		}
+	}
+	return agm;
+}
+
+
+void Grafo::init_kruskal(){
+	for(int i = 0; i<(_vertices).size(); i++){
+		_padre.push_back(i);
+	}
+}
+
+int Grafo::find(int id){
+	if(_padre[id] != id){
+		return find(_padre[id]);
+	}
+	return _padre[id];
+}
+
+void Grafo::conjunction(int u, int v){
+	_padre[find(u)] = _padre[find(v)];
+}
+
+
+listAristas Grafo::kruskal(listAristas aristas){
+	init_kruskal();
+	listAristas agm;
 	sort(aristas.begin(),aristas.end(), porPeso);
 	for(int j = 0; j < aristas.size(); j++){
 		if( find(std::get<0>(aristas[j])) != find(std::get<1>(aristas[j])) ){
@@ -114,6 +151,40 @@ listAristas Grafo::kruskal(){
 		}
 	}
 	return agm;
+}
+
+listAristas Grafo::prim(){
+	listAristas padre;
+	std::vector<double> distancia;
+	std::vector<bool> visitado;
+
+	for(int i = 0; i < _vertices.size(); i++){
+		padre.push_back(std::tuple<int,int,double>());
+		distancia.push_back(10000000);
+		visitado.push_back(false);
+	}
+
+	distancia[0] = 0;
+	std::priority_queue <std::tuple<int,double>, std::vector<std::tuple<int,double>>, Comparador> pq;
+	pq.push(std::tuple<int,double>(0, distancia[0]));
+	while(!pq.empty()){
+		std::tuple <int,double> t = pq.top();
+		pq.pop();
+		int t_1 = std::get<0>(t);
+		if(!visitado[t_1]){
+			visitado[t_1] = true;
+			for(int j = 0; j < _vertices[t_1].size(); j++){
+				int t_2 = _vertices[t_1][j].id;
+				if(!visitado[t_2] && (distancia[t_2] > _vertices[t_1][j].weight)){
+					distancia[t_2] = _vertices[t_1][j].weight;
+					padre[t_2] = std::tuple<int,int,double>(t_1,t_2,distancia[t_2]);
+					t = std::tuple<int,double>(t_2, distancia[t_2]);
+					pq.push(t);
+				}
+			}
+		}
+	}
+	return padre;
 }
 
 /*listAristas grafo::kruskal(){
@@ -220,21 +291,26 @@ listAristas remover_inconsistentes(listAristas l, int diametro){
 	for(int i = 0; i < res.size(); i++){
 		int u = std::get<0>(res[i]);
 		int v = std::get<1>(res[i]);
-		double promedio_u = promedio_vecinos(res,u,v,diametro);
-		double promedio_v = promedio_vecinos(res,v,u,diametro);
-		double peso = std::get<2>(res[i]);
-		double desvio_u = desvio_estandard(res,u,v,diametro,promedio_u);
-		double desvio_v = desvio_estandard(res,v,u,diametro,promedio_v);
-
-		// cout<< "promedio: " << promedio << "; peso: " << peso << endl;
-
-		bool pesoMayorPromedioU = peso > 3*promedio_u;
-		bool pesoMayorPromedioV = peso > 3*promedio_v;
-		bool pesoPromedioMayorDesvioU = (peso - promedio_u) > desvio_u*3;
-		bool pesoPromedioMayorDesvioV = (peso - promedio_v) > desvio_v*3;
-		if(pesoMayorPromedioU && pesoMayorPromedioV && pesoPromedioMayorDesvioU && pesoPromedioMayorDesvioV){
+		if(u == v){
 			res.erase(res.begin()+i);
 			i--;
+		}else{
+			double promedio_u = promedio_vecinos(res,u,v,diametro);
+			double promedio_v = promedio_vecinos(res,v,u,diametro);
+			double peso = std::get<2>(res[i]);
+			double desvio_u = desvio_estandard(res,u,v,diametro,promedio_u);
+			double desvio_v = desvio_estandard(res,v,u,diametro,promedio_v);
+
+			// cout<< "promedio: " << promedio << "; peso: " << peso << endl;
+
+			bool pesoMayorPromedioU = peso > 2*promedio_u;
+			bool pesoMayorPromedioV = peso > 2*promedio_v;
+			bool pesoPromedioMayorDesvioU = (peso - promedio_u) > desvio_u*3;
+			bool pesoPromedioMayorDesvioV = (peso - promedio_v) > desvio_v*3;
+			if(pesoMayorPromedioU && pesoMayorPromedioV && pesoPromedioMayorDesvioU && pesoPromedioMayorDesvioV){
+				res.erase(res.begin()+i);
+				i--;
+			}
 		}
 	}
 	return res;

@@ -13,6 +13,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <math.h>
+#include <queue>
 
 
 struct Coordenadas
@@ -23,6 +24,14 @@ struct Coordenadas
 	};
 
 typedef std::vector< std::tuple <int,int,double> > listAristas;
+
+class Comparador 
+{
+public:
+	int operator()(std::tuple<int,double> t ,std::tuple<int,double> s){
+		return std::get<1>(t) > std::get<1>(s);
+	}
+};
 
 class Grafo
 {
@@ -43,11 +52,17 @@ class Grafo
 		void new_node(int n);
 		void borrar_edge(int u, int v);
 		void add_edge(int u, int v, double weight);
-		void conjunction(int u, int v);
+		void conjunction_pc(int u, int v);
+		int find_pc(int id);
+		void init_kruskal_pc();
+		void imprimir_pos();
 		int find(int id);
 		void init_kruskal();
-		void imprimir_pos();
-		listAristas kruskal();
+		void conjunction(int u, int v);
+		listAristas kruskal(listAristas aristas);
+		listAristas kruskal_pc(listAristas aristas);
+		listAristas prim();
+		listAristas convert();
 		// listAristas remover_inconsistentes(listAristas l, int diametro);
 		// double promedio_vecinos(int u, int v, int tam);
 		// double promedio_vecinos(listAristas l, int u, int v, int diametro);
