@@ -66,6 +66,10 @@ class Grafo
 		listAristas kruskal_pc(listAristas aristas);
 		listAristas prim();
 		listAristas convert();
+		/*
+		std::string floyWarshall();
+		std::string bellmanFord();
+		*/
 		// listAristas remover_inconsistentes(listAristas l, int diametro);
 		// double promedio_vecinos(int u, int v, int tam);
 		// double promedio_vecinos(listAristas l, int u, int v, int diametro);

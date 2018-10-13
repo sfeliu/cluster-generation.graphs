@@ -224,6 +224,62 @@ listAristas Grafo::prim(){
 	return padre;
 }
 
+/*
+std::string Grafo::bellmanFord(){
+	std::vector<double> distancia;
+	bool cambios = false;
+	int i = 0;
+	for (int i = 0; i < _vertices.size(); ++i)
+	{
+		//falta importar #include <limits> 
+		//(para poder usar inf, que es como inicializa el algoritmo las distancias)
+		//distancia[i] = inf;
+	}
+	i = 0;
+	while( i < _vertices.size() && cambios)
+	{	
+		for (int j = 0; j < _vertices.size(); ++j)
+		{	
+			int min = distancia[j];
+			for (int k = 0; k < _vertices.size(); ++k)
+			{
+				if (min > distancia[k]+ _vertices[k][0])
+				{
+					min = distancia[k]+ _vertices[k][0];
+				}
+			}
+			distancia[j] = min;
+		}
+			i++;
+	}
+	if(i == n){
+		return "SI";
+	}
+	return "NO";
+}
+
+std::string Grafo::floyWarshall(){
+	for (int k = 0; k < _vertices.size(); ++k)
+	{
+		for (int i = 0; i < _vertices.size(); ++i)
+		{
+			for (int j = 0; j < count; ++j)
+			{
+				_vertices[i][j].weight = min(_vertices[i][j].weight,_vertices[i][k].weight+_vertices[k][i].weight);
+			}
+		}
+	}
+	for (int i = 0; i < _vertices.size(); ++i)
+	{
+		if (_vertices[i][i] < 0)
+		{
+			return return "SI";
+		}
+	}
+	return "NO";
+}
+*/
+
 /*listAristas grafo::kruskal(){
 	init_kruskal();
 	listAristas aristas;
