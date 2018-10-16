@@ -1,0 +1,35 @@
+\subsection{Correctitud}
+El problema ser\'a modelado como un grafo dirigido, el cual no tiene pesos negativos, como estamos buscando un ciclo en el cual ganemos dinero, queremos que la $\prod_{k \in \{i,...,j\}} a_{k} > 1$, pero los algoritmos que tenemos para encontrar caminos minimos solo trabajan considerando que el pasaje de un nodo a otro es aditivo, entonces pasaremos este grafo a otro donde los pesos son los logaritmos de los pesos originales porque los algoritmos que usaremos requieren que el peso del camino sea aditivo y no multiplicativo, con esto el problema original $\prod_{k \in \{i,...,j\}} a_{k} > 1$ queda como $\sum_{k \in \{i,...,j\}} log(a_{k}) > 0$, que es igual a $-\sum_{k \in \{i,...,j\}} log(a_{k}) < 0$.\\
+$\prod_{k \in \{i,...,j\}} a_{k} > 1 <=> log(\prod_{k \in \{i,...,j\}} a_{k}) > log(1) <=> \sum_{k \in \{i,...,j\}} log(a_{k}) > 0 <=> -\sum_{k \in \{i,...,j\}} log(a_{k}) < 0$.\\
+Entonces reducimos a un problema donde tenemos que buscar un ciclo negativos en un grafo donde el pasaje de un nodo a otro es aditivo.\\
+Para demostrar correctitud, nos basaremos en la correctitud de los algoritmos de Bellman-Ford y Floyd-Warshall.\\
+En los cuales podemos saber si existen ciclos negativos y no tienen precondici\'on sobre el input (como dijstra que pide que los pesos de las aristas sean positivos).\\
+
+Supongamos que el problema tiene soluci\'on y el algoritmo no lo encuentra.\\
+\begin{itemize}
+	\item => $\exists \{i,...,j\}  \prod_{k \in \{i,...,j\}} a_{k} > 1$.\\
+	\item => $\exists \{i,...,j\}  log(\prod_{k \in \{i,...,j\}} a_{k}) > log(1)$.\\
+	\item => $\exists \{i,...,j\}  \sum_{k \in \{i,...,j\}} log(a_{k}) > 0$.\\
+	\item => $\exists \{i,...,j\}  -\sum_{k \in \{i,...,j\}} log(a_{k}) < 0$.\\
+	\item => $\nexists \{i,...,j\} k \in \{i,...,j\}$ tal que forman un ciclo negativo y el algoritmo no lo encuentra.\\
+\end{itemize}
+Absurdo, pues los algoritmos son correctos y si existe un ciclo negativos, encuentran ese ciclo.\\
+
+Supongamos que el problema no tiene soluci\'on y el algoritmo nos dice que si.\\
+\begin{itemize}
+	\item 1: No tiene soluci\'on.\\
+	\item => $\nexists \{i,...,j\}  \prod_{k \in \{i,...,j\}} a_{k} > 1$.\\
+\end{itemize}	
+\begin{itemize}
+	\item 2:El algoritmo nos dice que existe un ciclo negativos.\\
+	\item => $\exists \{i,...,j\}  -\sum_{k \in \{i,...,j\}} log(a_{k}) < 0$.\\
+	\item => $\exists \{i,...,j\}  \sum_{k \in \{i,...,j\}} log(a_{k}) > 0$.\\
+	\item => $\exists \{i,...,j\}  log(\prod_{k \in \{i,...,j\}} a_{k}) > log(1)$.\\
+	\item => $\exists \{i,...,j\}  \prod_{k \in \{i,...,j\}} a_{k} > 1$.\\
+\end{itemize}
+
+Absurdo pues los algoritmos son correctos y si no existe solución nos dice que no.\\
+
+
+
+Consideraciones: se puede aplicar el logaritmo para pasar de una representacion a otra, pues los elementos son todos positivos y distintos de 0.\\
