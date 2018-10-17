@@ -445,3 +445,99 @@ void Grafo::imprimir_pos(){
 std::vector<Coordenadas>& Grafo::puntos(){
 	return _puntos;
 }
+
+double& Grafo::peso(int u, int v){
+	return _vertices[u][v].weight;
+}
+
+void Grafo::logPesos(){
+	int n = _puntos.size();
+	for (int u = 0; u < n; u++){
+		for (int v = 0; v < n; v++){
+			peso(u,v) = log10(peso(u,v));
+		}
+	}
+}
+
+void Grafo::cicloNegativoFW(){
+	int n = _puntos.size();
+	std::vector <int> filaSiguiente(n,-1);
+	std::vector <std::vector<int> > siguiente (n,filaSiguiente);
+
+	int hayCicloNegativo = floydWarshall(siguiente);
+
+	if (hayCicloNegativo != -1){
+		std::cout << "SI ";
+		int u = hayCicloNegativo;
+		int v = siguiente[u][u];
+		std::vector<int> recorrido;
+			while (v != u){
+				u = siguiente[u][v];
+				recorrido.push_back(u);
+			}
+			for (int i = 0; i < recorrido.size(); i++){
+				std::cout << recorrido[i] << " ";
+			}
+	} else {
+		std::cout << "NO";
+	}
+}
+
+int Grafo::floydWarshall(std::vector< std::vector<int> > &siguiente){
+	int n = _puntos.size();
+	std::vector <double> filaDistancias(n,INF);
+
+	std::vector <std::vector<double> > distancias (n,filaDistancias);
+
+	for (int u = 0; u < n; u++){
+		for(int v = 0; v < n; v++){
+			distancias[u][v] = peso(u,v);
+			siguiente[u][v] = v;
+		}
+	}
+
+	for (int k = 0; k < n; k++){
+		for (int i = 0; i < n; i++){
+			for (int j = 0; j < n; j++){
+				if (distancias[i][j] > distancias[i][k] + distancias[k][j]){
+					distancias[i][j] = distancias[i][k] + distancias[k][j];
+					siguiente[i][j] = siguiente[i][k];
+				}
+			}
+		}
+	}
+
+    for (int i = 0; i < n; i++) 
+        if (distancias[i][i] < 0) 
+            return i; 
+    return -1;  
+}
+
+void Grafo::cicloNegativoBF(){
+	int n = _puntos.size();
+	std::vector <int> pred(n,-1);
+	std::vector <double> distancias(n,INF);
+	// std::vector <std::vector<double> > distancias (n,filaDistancias);
+	int i = 0;
+	bool cambio = true;
+	while(i < n && cambio){	
+		for (int j = 0; j < n; ++j){	
+			double min = distancias[j];
+			for (int k = 0; k < n; ++k){
+				if (min > distancias[k]+ peso(k,0)){
+					min = distancias[k]+ peso(k,0);
+					pred[j] = k;
+				} else {
+					cambio = false;
+				}
+			}
+			distancias[j] = min;
+		}
+			i++;
+	}
+	if(i == n){
+		std::cout<< "SI";
+
+	}
+	std::cout<< "NO";
+}

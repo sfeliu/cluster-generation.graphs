@@ -14,7 +14,10 @@
 #include <cstdlib>
 #include <math.h>
 #include <queue>
+#include <limits> //Inf
 
+
+#define INF std::numeric_limits<double>::infinity()
 
 struct Coordenadas
 	{
@@ -66,6 +69,11 @@ class Grafo
 		listAristas kruskal_pc(listAristas aristas);
 		listAristas prim();
 		listAristas convert();
+
+		void cicloNegativoFW();
+		void cicloNegativoBF();
+
+		// bool floydWarshall(); 
 		/*
 		std::string floyWarshall();
 		std::string bellmanFord();
@@ -80,6 +88,10 @@ class Grafo
 		std::vector< std::vector<Node> > _vertices;
 		std::vector<Coordenadas> _puntos;
 
+		double& peso(int u, int v);
+		int floydWarshall(std::vector< std::vector<int> > &distancias);
+		int bellmanFord(std::vector< std::vector<int> > &distancias);
+		void logPesos();
 		// bool porPeso(std::tuple<int,int,double> a, std::tuple<int,int,double> b);
 
 };
