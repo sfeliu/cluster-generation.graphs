@@ -537,7 +537,16 @@ void Grafo::cicloNegativoBF(){
 	}
 	if(i == n){
 		std::cout<< "SI";
-
+		int u = 0;
+		int v = pred[u];
+		std::vector<int> recorrido;
+			while (v != u){
+				recorrido.push_back(v);
+				v = pred[v];
+			}
+			for (int i = n; i >= 0; i--){
+				std::cout << recorrido[i] << " ";
+			}
 	}
 	std::cout<< "NO";
 }
