@@ -1,8 +1,8 @@
 #include "include/grafo.hpp"
 #include "include/misc.hpp"
 
-int main(int mode){
-    mode = 0;
+int main(int argc, char** argv){
+    int mode = atoi(argv[1]);
     if(mode==0) {
         std::cout << "ingrese cantidad de puntos y sus cordenadas:" << std::endl;
         int n;
