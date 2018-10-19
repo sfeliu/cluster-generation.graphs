@@ -2,8 +2,10 @@ import os
 import sys
 from random import shuffle
 
-grafo_size = 100
-ciclo_size = 53
+
+
+grafo_size = int(sys.argv[1])
+ciclo_size = int(sys.argv[2])
 sarting_index = 1
 
 
