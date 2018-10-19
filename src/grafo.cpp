@@ -451,16 +451,17 @@ double& Grafo::peso(int u, int v){
 }
 
 void Grafo::logPesos(){
-	int n = _puntos.size();
+	int n = _vertices.size();
 	for (int u = 0; u < n; u++){
 		for (int v = 0; v < n; v++){
-			peso(u,v) = log10(peso(u,v));
+			peso(u,v) = - log10(peso(u,v));
 		}
 	}
 }
 
 void Grafo::cicloNegativoFW(){
-	int n = _puntos.size();
+	logPesos();
+	int n = _vertices.size();
 	std::vector <int> filaSiguiente(n,-1);
 	std::vector <std::vector<int> > siguiente (n,filaSiguiente);
 
@@ -471,10 +472,12 @@ void Grafo::cicloNegativoFW(){
 		int u = hayCicloNegativo;
 		int v = siguiente[u][u];
 		std::vector<int> recorrido;
+		recorrido.push_back(u);
 			while (v != u){
 				u = siguiente[u][v];
 				recorrido.push_back(u);
 			}
+			recorrido.push_back(u);
 			for (int i = 0; i < recorrido.size(); i++){
 				std::cout << recorrido[i] << " ";
 			}
@@ -484,7 +487,7 @@ void Grafo::cicloNegativoFW(){
 }
 
 int Grafo::floydWarshall(std::vector< std::vector<int> > &siguiente){
-	int n = _puntos.size();
+	int n = _vertices.size();
 	std::vector <double> filaDistancias(n,INF);
 
 	std::vector <std::vector<double> > distancias (n,filaDistancias);
@@ -514,7 +517,8 @@ int Grafo::floydWarshall(std::vector< std::vector<int> > &siguiente){
 }
 
 void Grafo::cicloNegativoBF(){
-	int n = _puntos.size();
+	logPesos();
+	int n = _vertices.size();
 	std::vector <int> pred(n,-1);
 	std::vector <double> distancias(n,INF);
 	// std::vector <std::vector<double> > distancias (n,filaDistancias);
