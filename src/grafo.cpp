@@ -525,11 +525,13 @@ void Grafo::cicloNegativoBF(){
 	int i = 0;
 	bool cambio = true;
 	while(i < n && cambio){	
+		bool cambioInterno = false;
+		
 		for (int j = 0; j < n; ++j){	
 			double min = distancias[j];
 			for (int k = 0; k < n; ++k){
-				if (min > distancias[k]+ peso(k,0)){
-					min = distancias[k]+ peso(k,0);
+				if (min > distancias[k]+ peso(k,j)){
+					min = distancias[k]+ peso(k,j);
 					pred[j] = k;
 				} else {
 					cambio = false;
@@ -537,6 +539,7 @@ void Grafo::cicloNegativoBF(){
 			}
 			distancias[j] = min;
 		}
+		if(!cambioInterno){cambio = false;}
 			i++;
 	}
 	if(i == n){
@@ -544,6 +547,7 @@ void Grafo::cicloNegativoBF(){
 		int u = 0;
 		int v = pred[u];
 		std::vector<int> recorrido;
+		recorrido.push_back(u);
 			while (v != u){
 				recorrido.push_back(v);
 				v = pred[v];
@@ -551,6 +555,7 @@ void Grafo::cicloNegativoBF(){
 			for (int i = n; i >= 0; i--){
 				std::cout << recorrido[i] << " ";
 			}
+			std::cout <<std::endl;
 	}
 	std::cout<< "NO";
 }
