@@ -469,15 +469,15 @@ void Grafo::cicloNegativoFW(){
 
 	if (hayCicloNegativo != -1){
 		std::cout << "SI ";
-		int u = hayCicloNegativo;
-		int v = siguiente[u][u];
 		std::vector<int> recorrido;
-		recorrido.push_back(u);
+		recorrido.push_back(hayCicloNegativo);
+		int v = hayCicloNegativo;
+		int u = siguiente[v][v];
 			while (v != u){
-				u = siguiente[u][v];
 				recorrido.push_back(u);
+				u = siguiente[u][v];
 			}
-			recorrido.push_back(u);
+			recorrido.push_back(hayCicloNegativo);
 			for (int i = 0; i < recorrido.size(); i++){
 				std::cout << recorrido[i] << " ";
 			}
