@@ -73,6 +73,7 @@ class Grafo
 		void cicloNegativoFW();
 		void cicloNegativoBF();
 
+        void logPesos();
 		// bool floydWarshall(); 
 		/*
 		std::string floyWarshall();
@@ -91,7 +92,6 @@ class Grafo
 		double& peso(int u, int v);
 		int floydWarshall(std::vector< std::vector<int> > &distancias);
 		int bellmanFord(std::vector< std::vector<int> > &distancias);
-		void logPesos();
 		// bool porPeso(std::tuple<int,int,double> a, std::tuple<int,int,double> b);
 
 };

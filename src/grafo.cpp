@@ -93,7 +93,7 @@ void Grafo::imprimir(){
 	std::cout<< std::endl << "imprimiendo grafo..."<< std::endl;
 	for(int i = 0; i < _vertices.size();i++){
 		for(int j = 0; j< _vertices[i].size(); j++){
-			std::cout<< "(" << i << "-->" << _vertices[i][j].id << ") ";
+			std::cout<< "(" << i << "-" << _vertices[i][j].weight << "->" << _vertices[i][j].id << ") ";
 		}
 		std::cout << std::endl;
 	}
@@ -460,7 +460,6 @@ void Grafo::logPesos(){
 }
 
 void Grafo::cicloNegativoFW(){
-	logPesos();
 	int n = _vertices.size();
 	std::vector <int> filaSiguiente(n,-1);
 	std::vector <std::vector<int> > siguiente (n,filaSiguiente);
@@ -517,45 +516,59 @@ int Grafo::floydWarshall(std::vector< std::vector<int> > &siguiente){
 }
 
 void Grafo::cicloNegativoBF(){
-	logPesos();
-	int n = _vertices.size();
+    int n = _vertices.size();
 	std::vector <int> pred(n,-1);
 	std::vector <double> distancias(n,INF);
+	std::vector <double> copia;
+	distancias[0] = 0;
+
 	// std::vector <std::vector<double> > distancias (n,filaDistancias);
 	int i = 0;
 	bool cambio = true;
 	while(i < n && cambio){	
-		bool cambioInterno = false;
-		
-		for (int j = 0; j < n; ++j){	
-			double min = distancias[j];
-			for (int k = 0; k < n; ++k){
-				if (min > distancias[k]+ peso(k,j)){
-					min = distancias[k]+ peso(k,j);
-					pred[j] = k;
-				} else {
-					cambio = false;
-				}
+		copia = distancias;
+		for (int u = 0; u < n; ++u){
+			for (int v = 0; v < n; ++v){
+				if(copia[u] != INF) {
+                    if ( copia[v] == INF || copia[v] > copia[u] + peso(u, v)){
+                        //std::cout << copia[v] << " > " << copia[u] << " + " << peso(u, v) << std::endl;
+                        distancias[v] = copia[u] + peso(u, v);
+                        pred[v] = u;
+                        cambio = true;
+                        //std::cout << u << " <- " << pred[v] << std::endl;
+                    }
+                }
 			}
-			distancias[j] = min;
 		}
-		if(!cambioInterno){cambio = false;}
-			i++;
+		i++;
 	}
-	if(i == n){
-		std::cout<< "SI";
-		int u = 0;
-		int v = pred[u];
-		std::vector<int> recorrido;
-		recorrido.push_back(u);
-			while (v != u){
-				recorrido.push_back(v);
-				v = pred[v];
-			}
-			for (int i = n; i >= 0; i--){
-				std::cout << recorrido[i] << " ";
-			}
-			std::cout <<std::endl;
-	}
-	std::cout<< "NO";
+	if(i == n) {
+	    //std::cout << "Encontre que hay ciclo"<< std::endl;
+        std::cout << "SI" << std::endl;
+        //for(int x = 0; x<pred.size(); x++){
+        //    std::cout << x << std::endl;
+        //}
+        for (int v = 0; v < n; v++) {
+            //std::cout << "copia" << copia[v] << "| real " << distancias[v] << std::endl;
+            if (copia[v] != distancias[v]){
+                int h = pred[v];
+                std::vector<int> recorrido;
+                recorrido.push_back(v);
+                while (h != v) {
+                    recorrido.push_back(h);
+                    h = pred[h];
+                    //std::cout << h << std::endl;
+                }
+                for (int j = recorrido.size()-1; j >= 0; j--) {
+                    std::cout << recorrido[j] << " ";
+                }
+                std::cout << recorrido[recorrido.size()-1] << std::endl;
+                break;
+            }//else{
+            //    std::cout << "caca" << std::endl;
+            //}
+        }
+    }else{
+        std::cout<< "NO";
+    }
 }

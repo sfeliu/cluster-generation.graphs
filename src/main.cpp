@@ -52,8 +52,9 @@ int main(int argc, char** argv){
             }
         }
         Grafo g(pesos);
-        // g.cicloNegativoBF();
-        g.cicloNegativoFW();
+        g.logPesos();
+        g.cicloNegativoBF();
+        //g.cicloNegativoFW();
     }
 
 	return 0;

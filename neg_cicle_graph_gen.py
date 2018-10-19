@@ -2,8 +2,8 @@ import os
 import sys
 from random import shuffle
 
-grafo_size = 10
-ciclo_size = 5
+grafo_size = 100
+ciclo_size = 53
 sarting_index = 1
 
 
@@ -20,7 +20,6 @@ grafo[ciclo_size-1][0] = 1.01
 #grafo2 = grafo
 #for ind, new_index in enumerate(indexs):
 #	grafo[ind] = grafo2[new_index]
-print(grafo)
 with open('tests/divisas/n' + str(grafo_size) + '_c' + str(ciclo_size) + '.csv', 'w+') as f:
 	f.write(str(grafo_size) + '\n')
 	for node in grafo:
