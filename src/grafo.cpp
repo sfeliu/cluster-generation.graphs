@@ -22,6 +22,7 @@ Grafo::Grafo(std::vector<Coordenadas> puntos) {
                 this->add_edge(i,j,peso);
             }
         }
+        _puntos[i] = puntos[i];
     }
 }
 
@@ -338,8 +339,11 @@ double promedio_vecinos(listAristas l, int u, int v, int diametro){
 	sumaCamino(l,u,v,suma,pasos,vecinos);
 	// pasos = diametro;
 	// sumaCamino(l,v,u,suma,pasos,vecinos);
-
-	suma = suma/(vecinos);
+	if(vecinos != 0){
+		suma = suma/(vecinos);
+	}else{
+		suma = 10000000;
+	}
 	return suma;
 }
 
@@ -373,13 +377,18 @@ double desvio_estandard(listAristas l, int u, int v, int diametro, double promed
 	int pasos = diametro;
 	int vecinos = 0;
 	varianza_vecinos(l,u,v,suma,pasos,vecinos, promedio);
-	suma = sqrt(suma/vecinos);
+	if(vecinos != 0){
+		suma = suma/(vecinos);
+	}else{
+		suma = 10000000;
+	}
+	suma = sqrt(suma);
 	return suma;
 
 }
 
 //TODO mandar a privado?
-listAristas remover_inconsistentes(listAristas l, int diametro){
+listAristas remover_inconsistentes(listAristas l, int ds, double f, double diametro, int mod){
 	listAristas res = l;
 	for(int i = 0; i < res.size(); i++){
 		int u = std::get<0>(res[i]);
@@ -396,14 +405,34 @@ listAristas remover_inconsistentes(listAristas l, int diametro){
 
 			// cout<< "promedio: " << promedio << "; peso: " << peso << endl;
 
-			bool pesoMayorPromedioU = peso > 2*promedio_u;
-			bool pesoMayorPromedioV = peso > 2*promedio_v;
-			bool pesoPromedioMayorDesvioU = (peso - promedio_u) > desvio_u*3;
-			bool pesoPromedioMayorDesvioV = (peso - promedio_v) > desvio_v*3;
-			if(pesoMayorPromedioU && pesoMayorPromedioV && pesoPromedioMayorDesvioU && pesoPromedioMayorDesvioV){
-				res.erase(res.begin()+i);
-				i--;
+			bool pesoMayorPromedioU = peso > f*promedio_u;
+			bool pesoMayorPromedioV = peso > f*promedio_v;
+			bool pesoPromedioMayorDesvioU = (peso - promedio_u) > desvio_u*ds;
+			bool pesoPromedioMayorDesvioV = (peso - promedio_v) > desvio_v*ds;
+			if(mod == 1){
+				if(pesoMayorPromedioU && pesoMayorPromedioV){
+					res.erase(res.begin()+i);
+					i--;
+				}
 			}
+			if(mod == 2){
+				if(pesoPromedioMayorDesvioU && pesoPromedioMayorDesvioV){
+					res.erase(res.begin()+i);
+					i--;
+				}
+			}
+			if(mod == 3){
+				if((pesoMayorPromedioU && pesoMayorPromedioV) || (pesoPromedioMayorDesvioU && pesoPromedioMayorDesvioV)){
+					res.erase(res.begin()+i);
+					i--;
+				}
+			}
+			if(mod == 4){
+				if(pesoMayorPromedioU && pesoMayorPromedioV && pesoPromedioMayorDesvioU && pesoPromedioMayorDesvioV){
+					res.erase(res.begin()+i);
+					i--;
+				}
+			}			
 		}
 	}
 	return res;
@@ -571,4 +600,64 @@ void Grafo::cicloNegativoBF(){
     if(!hayCiclo){
         std::cout<< "NO";
     }
+}
+
+void descubrirConexoAux(int u, listAristas res, int& contador, std::vector<bool> &visitado, int& i, std::vector<int> &comp_conex){
+	comp_conex[u] = contador;
+	comp_conex[std::get<1>(res[i])] = contador;
+	visitado[u] = true;
+	for(int j = 0; j<res.size(); j++){
+		if(i != j ){
+			if(std::get<0>(res[j]) == u){
+				descubrirConexoAux(std::get<1>(res[j]), res, contador, visitado, j, comp_conex);
+			}
+			if( std::get<1>(res[j]) == u){
+				descubrirConexoAux(std::get<0>(res[j]), res, contador, visitado, j, comp_conex);
+			}
+		}else{
+			if(!visitado[std::get<1>(res[j])]){
+				descubrirConexoAux(std::get<1>(res[j]), res, contador, visitado, j, comp_conex);
+			}
+		}
+	}
+}
+
+
+std::vector<int> descubrirConexo(listAristas l, int n){
+	std::vector<int> comp_conex;
+	int contador = 0;
+	std::vector<bool> visitado;
+	for(int i = 0; i < n; i++){
+		comp_conex.push_back(0);
+		visitado.push_back(false);	
+	}
+	for(int i = 0; i < l.size(); i++){
+		if(!visitado[std::get<0>(l[i])]){
+			descubrirConexoAux(std::get<0>(l[i]), l, contador, visitado,i,comp_conex);	
+			contador++;
+		}
+	}
+	return comp_conex;
+}
+
+listAristas diff(listAristas& l1, listAristas& l2){
+	listAristas res;
+	for(int i = 0; i < l1.size(); i++){
+		bool pertenece = false;
+		for(int j = 0; j< l2.size(); j++){
+			bool igualesInv = (std::get<0>(l1[i]) == std::get<1>(l2[j])) && (std::get<1>(l1[i]) == std::get<0>(l2[j]));
+			bool iguales = (std::get<0>(l1[i]) == std::get<0>(l2[j])) && (std::get<1>(l1[i]) == std::get<1>(l2[j]));
+			if(iguales || (igualesInv)){
+				pertenece = true;
+				res.push_back(l1[i]);
+				l2.erase(l2.begin()+j);
+				l1.erase(l1.begin()+i);
+				i--;
+				break;
+			}
+		}
+		// if(!pertenece){
+		// }
+	}
+	return res;
 }
