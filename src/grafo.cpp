@@ -516,11 +516,12 @@ int Grafo::floydWarshall(std::vector< std::vector<int> > &siguiente){
 }
 
 void Grafo::cicloNegativoBF(){
+    //imprimir();
     int n = _vertices.size();
-	std::vector <int> pred(n,-1);
-	std::vector <double> distancias(n,INF);
-	std::vector <double> copia;
-	distancias[0] = 0;
+    std::vector <int> pred(n,-1);
+    std::vector <double> distancias(n,INF);
+    std::vector <double> copia;
+    distancias[0] = 0;
 
 	// std::vector <std::vector<double> > distancias (n,filaDistancias);
 	int i = 0;
@@ -542,33 +543,32 @@ void Grafo::cicloNegativoBF(){
 		}
 		i++;
 	}
-	if(i == n) {
 	    //std::cout << "Encontre que hay ciclo"<< std::endl;
-        std::cout << "SI" << std::endl;
         //for(int x = 0; x<pred.size(); x++){
-        //    std::cout << x << std::endl;
+        //    std::cout << pred[x] << std::endl;
         //}
-        for (int v = 0; v < n; v++) {
-            //std::cout << "copia" << copia[v] << "| real " << distancias[v] << std::endl;
-            if (copia[v] != distancias[v]){
-                int h = pred[v];
-                std::vector<int> recorrido;
-                recorrido.push_back(v);
-                while (h != v) {
-                    recorrido.push_back(h);
-                    h = pred[h];
-                    //std::cout << h << std::endl;
-                }
-                for (int j = recorrido.size()-1; j >= 0; j--) {
-                    std::cout << recorrido[j] << " ";
-                }
-                std::cout << recorrido[recorrido.size()-1] << std::endl;
-                break;
-            }//else{
-            //    std::cout << "caca" << std::endl;
-            //}
+    bool hayCiclo = false;
+    for (int v = 0; v < n; v++) {
+        //std::cout << "copia" << copia[v] << "| real " << distancias[v] << std::endl;
+        if (copia[v] != distancias[v]){
+            hayCiclo = true;
+            std::cout << "SI ";
+            int h = pred[v];
+            std::vector<int> recorrido;
+            recorrido.push_back(v);
+            while (h != v) {
+                recorrido.push_back(h);
+                h = pred[h];
+                //std::cout << h << std::endl;
+            }
+            for (int j = recorrido.size()-1; j >= 0; j--) {
+                std::cout << recorrido[j] << " ";
+            }
+            std::cout << recorrido[recorrido.size()-1] << std::endl;
+            break;
         }
-    }else{
+    }
+    if(!hayCiclo){
         std::cout<< "NO";
     }
 }
