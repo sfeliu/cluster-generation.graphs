@@ -28,6 +28,14 @@ Sea $i$ el nodo en el cual encontramos un ciclo negativo ($distancias[i][i] < 0$
     \li $recorrido$.agregar($i$)
     \li \Return $recorrido$
 \end{codebox}
+
+\par A la hora de analizar la complejidad de esta variaci\'on de Floyd-Warshall partimos de la base que FW tiene una complejidad
+de $O(n^3)$. Nuestra modificaci\'on solo agrega la creaci\'on de la matriz $siguientes$ ($O(n^2)$) y luego actualizarla 
+cada vez que FW actualiza distancias lo cual no afecta la complejidad asint\'otica del algoritmo.
+\par Para reconstruir el ciclo negativo, el mismo tendr\'a longitud a lo sumo $n$ raz\'on por la cual la guarda de 
+la linea 4 se ejecutar\'a a lo sumo $n$ veces.
+\par En conclusi\'on la ejecuci\'on de este algoritmo tendr\'a como complejidad $(O(n^3))$
+
 \subsubsection{Bellman-Ford}
 Para encontrar un ciclo negativo, utilizamos en escencia el algoritmo de Bellman-Ford introduciendo algunas
 modificaciones para poder reconstruir el ciclo negativo:
