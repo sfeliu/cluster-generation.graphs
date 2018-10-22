@@ -21,13 +21,13 @@ int main(int argc, char** argv){
         listAristas aristas = g.convert();
         listAristas particionado = g.kruskal(aristas);
         imprimir_agm(particionado);
-        listAristas res = remover_inconsistentes(particionado, 1);
+        // listAristas res = remover_inconsistentes(particionado, 1);
         //std::ofstream file_1("/Users/pablo2martin/Downloads/algo3TP2/build/grafo2_clu_d4_f2_desvio3.csv");
         //file_1<< "x_1, " << "y_1," << "x_2, " << "y_2" << endl;
         // for(int i = 0; i < res.size(); i++){
         // 	file_1 << (g.puntos()[std::get<0>(res[i])]).x << ", "<< (g.puntos()[std::get<0>(res[i])]).y <<", " << (g.puntos()[std::get<1>(res[i])]).x << ", "<< (g.puntos()[std::get<1>(res[i])]).y << std::endl;
         // }
-        imprimir_agm(res);
+        // imprimir_agm(res);
         //g.imprimir_pos();
         // g.new_node(3);
         // g.add_edge(0,2,1);
