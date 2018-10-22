@@ -1,0 +1,38 @@
+\par Comenzamos con la matriz de adyacencia $(W)_{ij}$ que luego transformamos en $(W')_{ij}$ donde $w'_{ij} = - \log w_{ij}$
+\par Tal como mencionamos previamente, creamos esta nueva matriz para que poder encontrar una soluci\'on al problema
+del arbitraje se limite a hallar ciclos negativos.
+\par No solo nos importa decidir si existe o no un ciclo negativo, sino que tambi\'en nos interesa poder reconstruirlo
+(ese ser\'a la sucesi\'on de compra/venta de divisas que deber\'iamos realizar para obtener gananacia). 
+Para esto utilizamos variantes de dos algoritmos.
+\subsubsection{Floyd-Warshall}
+Para encontrar un ciclo negativo, utilizamos en escencia el algoritmo de Floyd-Warshall solo que agregando algunas
+cosas:
+\begin{enumerate}
+\item Contamos tambi\'en con una matriz de $nxn$ en el cual guardamos los nodos siguientes al que estamos recorriendo.
+\item A la hora de actualizar la matriz de distancias, tambi\'en actualizamos la de nodos siguientes.
+\item Una vez finalizadas el algoritmo de FW, revisamos si alg\'un elemento en la diagonal de distancias es negativo
+(esto implica que existe un ciclo negativo).
+\end{enumerate}
+Sea $i$ el nodo en el cual encontramos un ciclo negativo ($distancias[i][i] < 0$)
+
+\begin{codebox}
+    \Procname {\proc{CicloNegativo}(Matriz($int$) $siguientes$, int $i$)}
+    \li $recorrido$.agregar($i$)
+    \li $v = i$
+    \li $u$ = $siguientes[u][v]$
+    \li \While ($u \neq v$)
+        \Then
+    \li     $recorrido$.agregar($u$)
+    \li     $u$ = $siguiente[u][v]$
+    \End
+    \li $recorrido$.agregar($i$)
+    \li \Return $recorrido$
+\end{codebox}
+\subsubsection{Bellman-Ford}
+Para encontrar un ciclo negativo, utilizamos en escencia el algoritmo de Bellman-Ford introduciendo algunas
+modificaciones para poder reconstruir el ciclo negativo:
+
+\begin{enumerate}
+\item Contamos tambi\'en con un vector $predecesor$ en el cual almacenamos el nodo predecesor al que
+estamos investigando.
+\end{enumerate}
