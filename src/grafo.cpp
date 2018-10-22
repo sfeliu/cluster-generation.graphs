@@ -528,6 +528,7 @@ void Grafo::cicloNegativoBF(){
 	bool cambio = true;
 	while(i < n && cambio){	
 		copia = distancias;
+		cambio = false;
 		for (int u = 0; u < n; ++u){
 			for (int v = 0; v < n; ++v){
 				if(copia[u] != INF) {
