@@ -16,14 +16,14 @@ Grafo::Grafo(std::vector<Coordenadas> puntos) {
     for(int i = 0; i<n ; i++){
         for(int j = 0; j<n; j++){
             if(i != j ){
-                double diff_x = abs(puntos[i].x)-abs(puntos[j].x);
-                double diff_y = abs(puntos[i].y)-abs(puntos[j].y);
+                double diff_x = puntos[i].x - puntos[j].x;
+                double diff_y = puntos[i].y - puntos[j].y;
                 double peso = sqrt(diff_x*diff_x + diff_y*diff_y);
                 this->add_edge(i,j,peso);
             }
         }
-        _puntos[i] = puntos[i];
     }
+    _puntos = puntos;
 }
 
 
@@ -34,6 +34,13 @@ Grafo::Grafo(std::vector<std::vector<double>> pesos) {
         for(int j = 0; j<n; j++){
             this->add_directional_edge(i,j,pesos[i][j]);
         }
+    }
+}
+
+Grafo::Grafo(listAristas l, int cantNodos) {
+    this->new_node(cantNodos);
+    for(int i =0; i<l.size(); i++){
+        this->add_edge(std::get<0>(l[i]),std::get<1>(l[i]),std::get<2>(l[i]));
     }
 }
 
@@ -332,7 +339,7 @@ void sumaCamino(listAristas l, int u, int v, double &suma, int &pasos, int &veci
 }
 
 //TODO mandar a privado?
-double promedio_vecinos(listAristas l, int u, int v, int diametro){
+/*double promedio_vecinos(listAristas l, Grafo g, int u, int v, int diametro){
 	double suma = 0;
 	int pasos = diametro;
 	int vecinos = 0;
@@ -341,6 +348,21 @@ double promedio_vecinos(listAristas l, int u, int v, int diametro){
 	// sumaCamino(l,v,u,suma,pasos,vecinos);
 	if(vecinos != 0){
 		suma = suma/(vecinos);
+	}else{
+		suma = 10000000;
+	}
+	return suma;
+}*/
+
+double promedio_vecinos(listAristas vecinos){
+	double suma = 0;
+	// pasos = diametro;
+	// sumaCamino(l,v,u,suma,pasos,vecinos);
+	for(int i=0; i<vecinos.size(); i++){
+	    suma += std::get<2>(vecinos[i]);
+	}
+	if(!vecinos.empty()){
+		suma = suma/(vecinos.size());
 	}else{
 		suma = 10000000;
 	}
@@ -371,8 +393,23 @@ void varianza_vecinos(listAristas l, int u, int v, double &suma, int &pasos, int
 	}					
 }
 
+double desvio_estandard(listAristas vecinos, double promedio){
+    double suma = 0;
+    for(int i=0; i<vecinos.size(); i++){
+        suma += suma + pow(std::get<2>(vecinos[i])-promedio,2);
+    }
+    if(!vecinos.empty()){
+        suma = suma/(vecinos.size());
+    }else{
+        suma = 10000000;
+    }
+    suma = sqrt(suma);
+    return suma;
+
+}
+
 //TODO mandar a privado?
-double desvio_estandard(listAristas l, int u, int v, int diametro, double promedio){
+/*double desvio_estandard(listAristas l, int u, int v, int diametro, double promedio){
 	double suma = 0;
 	int pasos = diametro;
 	int vecinos = 0;
@@ -385,23 +422,43 @@ double desvio_estandard(listAristas l, int u, int v, int diametro, double promed
 	suma = sqrt(suma);
 	return suma;
 
+}*/
+
+// Basado en DFS, Sabiendo que no hay ciclos.
+listAristas Grafo::obtener_vecinos(int u, int v, double cant_vecinos){
+    listAristas vecindad;
+    for(int i=0; i<_vertices[u].size(); i++){
+        if(_vertices[u][i].id != v){
+            vecindad.push_back(std::tuple<int,int,double>(u,_vertices[u][i].id,_vertices[u][i].weight));
+            cant_vecinos--;
+            if(cant_vecinos > 0){
+                listAristas vecinos_de_vecinos = obtener_vecinos(_vertices[u][i].id, u, cant_vecinos);
+                vecindad.insert(vecindad.end(), vecinos_de_vecinos.begin(), vecinos_de_vecinos.end());
+            }
+            cant_vecinos++;
+        }
+    }
+    return vecindad;
 }
 
 //TODO mandar a privado?
-listAristas remover_inconsistentes(listAristas l, int ds, double f, double diametro, int mod){
+listAristas remover_inconsistentes(listAristas l, Grafo g, int ds, double f, double diametro, int mod){
 	listAristas res = l;
 	for(int i = 0; i < res.size(); i++){
 		int u = std::get<0>(res[i]);
 		int v = std::get<1>(res[i]);
 		if(u == v){
 			res.erase(res.begin()+i);
+			g.borrar_edge(u,v);
 			i--;
 		}else{
-			double promedio_u = promedio_vecinos(res,u,v,diametro);
-			double promedio_v = promedio_vecinos(res,v,u,diametro);
-			double peso = std::get<2>(res[i]);
-			double desvio_u = desvio_estandard(res,u,v,diametro,promedio_u);
-			double desvio_v = desvio_estandard(res,v,u,diametro,promedio_v);
+		    listAristas vecinos_u = g.obtener_vecinos(u,v,diametro);
+            listAristas vecinos_v = g.obtener_vecinos(v, u, diametro);
+            double promedio_u = promedio_vecinos(vecinos_u);
+            double promedio_v = promedio_vecinos(vecinos_v);
+            double peso = std::get<2>(res[i]);
+            double desvio_u = desvio_estandard(vecinos_u,promedio_u);
+            double desvio_v = desvio_estandard(vecinos_v,promedio_v);
 
 			// cout<< "promedio: " << promedio << "; peso: " << peso << endl;
 
@@ -412,24 +469,28 @@ listAristas remover_inconsistentes(listAristas l, int ds, double f, double diame
 			if(mod == 1){
 				if(pesoMayorPromedioU && pesoMayorPromedioV){
 					res.erase(res.begin()+i);
+                    g.borrar_edge(u,v);
 					i--;
 				}
 			}
 			if(mod == 2){
 				if(pesoPromedioMayorDesvioU && pesoPromedioMayorDesvioV){
 					res.erase(res.begin()+i);
+                    g.borrar_edge(u,v);
 					i--;
 				}
 			}
 			if(mod == 3){
 				if((pesoMayorPromedioU && pesoMayorPromedioV) || (pesoPromedioMayorDesvioU && pesoPromedioMayorDesvioV)){
 					res.erase(res.begin()+i);
+                    g.borrar_edge(u,v);
 					i--;
 				}
 			}
 			if(mod == 4){
 				if(pesoMayorPromedioU && pesoMayorPromedioV && pesoPromedioMayorDesvioU && pesoPromedioMayorDesvioV){
 					res.erase(res.begin()+i);
+                    g.borrar_edge(u,v);
 					i--;
 				}
 			}			

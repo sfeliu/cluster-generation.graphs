@@ -14,6 +14,7 @@
 #include <cstdlib>
 #include <math.h>
 #include <queue>
+#include <chrono>
 #include <limits> //Inf
 
 
@@ -51,6 +52,7 @@ class Grafo
 		Grafo();
 		Grafo(std::vector<Coordenadas> puntos); // constructor de grafo Kn con coordenadas
 		Grafo(std::vector<std::vector<double>> pesos); // constructor de grafo Kn con matriz de pesos
+		Grafo(listAristas l, int cantNodos); // Contructor con listaAristas.
 		bool existe(int u, int v);
 		void imprimir();
 		void new_node();
@@ -65,6 +67,7 @@ class Grafo
 		int find(int id);
 		void init_kruskal();
 		void conjunction(int u, int v);
+		listAristas obtener_vecinos(int u, int v, double cant_vecinos);
 		listAristas kruskal(listAristas aristas);
 		listAristas kruskal_pc(listAristas aristas);
 		listAristas prim();
