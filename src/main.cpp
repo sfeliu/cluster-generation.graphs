@@ -50,7 +50,6 @@ int main(int argc, char** argv){
 
         // cat grafo1.csv | ./ejec
     }else{
-        // std::cout << "ingrese cantidad de puntos y sus cordenadas:" << std::endl;
         std::vector<std::vector<double>> pesos;
         int n;
         std::cin >> n;
@@ -65,8 +64,6 @@ int main(int argc, char** argv){
         }
         Grafo g(pesos);
         g.logPesos();
-        //g.imprimir();
-        //std::cout << std::endl;
         if(atoi(argv[2]) == 0){
             g.cicloNegativoBF();
         }else{
