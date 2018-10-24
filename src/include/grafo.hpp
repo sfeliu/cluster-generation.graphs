@@ -15,14 +15,13 @@
 #include <math.h>
 #include <queue>
 #include <chrono>
-#include <limits> //Inf
+#include <limits> 
 
 
 #define INF std::numeric_limits<double>::infinity()
 
 struct Coordenadas
 	{
-	// public:
 		double x;
 		double y;	
 	};
@@ -77,14 +76,6 @@ class Grafo
 		void cicloNegativoBF();
 
         void logPesos();
-		// bool floydWarshall(); 
-		/*
-		std::string floyWarshall();
-		std::string bellmanFord();
-		*/
-		// listAristas remover_inconsistentes(listAristas l, int diametro);
-		// double promedio_vecinos(int u, int v, int tam);
-		// double promedio_vecinos(listAristas l, int u, int v, int diametro);
 
 	private:
 		std::vector<int> _padre;
@@ -95,7 +86,6 @@ class Grafo
 		double& peso(int u, int v);
 		int floydWarshall(std::vector< std::vector<int> > &distancias);
 		int bellmanFord(std::vector< std::vector<int> > &distancias);
-		// bool porPeso(std::tuple<int,int,double> a, std::tuple<int,int,double> b);
 
 };
 

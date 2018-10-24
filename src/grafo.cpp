@@ -108,7 +108,6 @@ void Grafo::imprimir(){
 }
 
 
-//TODO mandar a privado
 bool porPeso(std::tuple<int,int,double> a, std::tuple<int,int,double> b){
 	return (std::get<2>(a) < std::get<2>(b));
 }
@@ -232,89 +231,6 @@ listAristas Grafo::prim(){
 	return padre;
 }
 
-/*
-std::string Grafo::bellmanFord(){
-	std::vector<double> distancia;
-	bool cambios = false;
-	int i = 0;
-	for (int i = 0; i < _vertices.size(); ++i)
-	{
-		//falta importar #include <limits> 
-		//(para poder usar inf, que es como inicializa el algoritmo las distancias)
-		//distancia[i] = inf;
-	}
-	i = 0;
-	while( i < _vertices.size() && cambios)
-	{	
-		for (int j = 0; j < _vertices.size(); ++j)
-		{	
-			int min = distancia[j];
-			for (int k = 0; k < _vertices.size(); ++k)
-			{
-				if (min > distancia[k]+ _vertices[k][0])
-				{
-					min = distancia[k]+ _vertices[k][0];
-				}
-			}
-			distancia[j] = min;
-		}
-			i++;
-	}
-	if(i == n){
-		return "SI";
-	}
-	return "NO";
-}
-
-std::string Grafo::floyWarshall(){
-	for (int k = 0; k < _vertices.size(); ++k)
-	{
-		for (int i = 0; i < _vertices.size(); ++i)
-		{
-			for (int j = 0; j < count; ++j)
-			{
-				_vertices[i][j].weight = min(_vertices[i][j].weight,_vertices[i][k].weight+_vertices[k][i].weight);
-			}
-		}
-	}
-	for (int i = 0; i < _vertices.size(); ++i)
-	{
-		if (_vertices[i][i] < 0)
-		{
-			return return "SI";
-		}
-	}
-	return "NO";
-}
-*/
-
-/*listAristas grafo::kruskal(){
-	init_kruskal();
-	listAristas aristas;
-	listAristas agm;
-	for(int i = 0; i<vertices.size(); i++){
-		for(int j = 0; j<vertices[i].size(); j++){
-			aristas.push_back(tuple<int,int,double>(i,(vertices[i][j])->id,(vertices[i][j])->weight));
-			// if(i == 10){
-			// 	cout << get<2>(aristas[j]) << endl;	
-			// }
-		}
-	}
-	sort(aristas.begin(),aristas.end(), porPeso);
-	for(int j = 0; j<aristas.size(); j++){
-		if( find(get<0>(aristas[j])) != find(get<1>(aristas[j])) ){
-			agm.push_back(aristas[j]);
-			conjunction(get<0>(aristas[j]),get<1>(aristas[j]));
-		}
-	}
-	return agm;
-}*/
-
-/*bool esAlcanzable(listAristas l, int u, int i, int diametro, double &suma, int &pasos){
-
-}*/
-
-//TODO mandar a privado?
 void sumaCamino(listAristas l, int u, int v, double &suma, int &pasos, int &vecinos){
 	if (pasos == 0){
 		return;
@@ -338,21 +254,6 @@ void sumaCamino(listAristas l, int u, int v, double &suma, int &pasos, int &veci
 	}
 }
 
-//TODO mandar a privado?
-/*double promedio_vecinos(listAristas l, Grafo g, int u, int v, int diametro){
-	double suma = 0;
-	int pasos = diametro;
-	int vecinos = 0;
-	sumaCamino(l,u,v,suma,pasos,vecinos);
-	// pasos = diametro;
-	// sumaCamino(l,v,u,suma,pasos,vecinos);
-	if(vecinos != 0){
-		suma = suma/(vecinos);
-	}else{
-		suma = 10000000;
-	}
-	return suma;
-}*/
 
 double promedio_vecinos(listAristas vecinos){
 	double suma = 0;
@@ -369,7 +270,6 @@ double promedio_vecinos(listAristas vecinos){
 	return suma;
 }
 
-//TODO mandar a privado?
 void varianza_vecinos(listAristas l, int u, int v, double &suma, int &pasos, int &vecinos, double promedio){
 	if (pasos == 0){
 		return;
@@ -408,21 +308,6 @@ double desvio_estandard(listAristas vecinos, double promedio){
 
 }
 
-//TODO mandar a privado?
-/*double desvio_estandard(listAristas l, int u, int v, int diametro, double promedio){
-	double suma = 0;
-	int pasos = diametro;
-	int vecinos = 0;
-	varianza_vecinos(l,u,v,suma,pasos,vecinos, promedio);
-	if(vecinos != 0){
-		suma = suma/(vecinos);
-	}else{
-		suma = 10000000;
-	}
-	suma = sqrt(suma);
-	return suma;
-
-}*/
 
 // Basado en DFS, Sabiendo que no hay ciclos.
 listAristas Grafo::obtener_vecinos(int u, int v, double cant_vecinos){
@@ -441,7 +326,6 @@ listAristas Grafo::obtener_vecinos(int u, int v, double cant_vecinos){
     return vecindad;
 }
 
-//TODO mandar a privado?
 listAristas remover_inconsistentes(listAristas l, Grafo g, int ds, double f, double diametro, int mod){
 	listAristas res = l;
 	for(int i = 0; i < res.size(); i++){
@@ -459,8 +343,6 @@ listAristas remover_inconsistentes(listAristas l, Grafo g, int ds, double f, dou
             double peso = std::get<2>(res[i]);
             double desvio_u = desvio_estandard(vecinos_u,promedio_u);
             double desvio_v = desvio_estandard(vecinos_v,promedio_v);
-
-			// cout<< "promedio: " << promedio << "; peso: " << peso << endl;
 
 			bool pesoMayorPromedioU = peso > f*promedio_u;
 			bool pesoMayorPromedioV = peso > f*promedio_v;
@@ -517,20 +399,6 @@ void Grafo::imprimir_pos(){
 	}
 	std::cout << "}" <<std::endl;
 }
-
-/*double grafo::promedio_vecinos(int u, int v, int tam){
-	double promedio;
-	double cant_vecinos_u = (vertices[u].size()<tam) ? vertices[u].size() : tam;
-	double cant_vecinos_v = (vertices[v].size()<tam) ? vertices[v].size() : tam;
-	for(int i = 0; i<cant_vecinos_u; i++){
-		promedio = promedio + vertices[u][i]->weight;
-	}
-	for(int j = 0; j< cant_vecinos_v; j++){
-		promedio = promedio + vertices[v][j]->weight;
-	}
-	promedio = promedio/(cant_vecinos_v+cant_vecinos_u);
-	return promedio;
-}*/
 
 std::vector<Coordenadas>& Grafo::puntos(){
 	return _puntos;
@@ -606,14 +474,12 @@ int Grafo::floydWarshall(std::vector< std::vector<int> > &siguiente){
 }
 
 void Grafo::cicloNegativoBF(){
-    //imprimir();
     int n = _vertices.size();
     std::vector <int> pred(n,-1);
     std::vector <double> distancias(n,INF);
     std::vector <double> copia;
     distancias[0] = 0;
 
-	// std::vector <std::vector<double> > distancias (n,filaDistancias);
 	int i = 0;
 	bool cambio = true;
 	while(i < n && cambio){	
@@ -623,34 +489,29 @@ void Grafo::cicloNegativoBF(){
 			for (int v = 0; v < n; ++v){
 				if(copia[u] != INF) {
                     if ( copia[v] == INF || copia[v] > copia[u] + peso(u, v)){
-                        //std::cout << copia[v] << " > " << copia[u] << " + " << peso(u, v) << std::endl;
                         distancias[v] = copia[u] + peso(u, v);
                         pred[v] = u;
                         cambio = true;
-                        //std::cout << u << " <- " << pred[v] << std::endl;
                     }
                 }
 			}
 		}
 		i++;
 	}
-	    //std::cout << "Encontre que hay ciclo"<< std::endl;
-        //for(int x = 0; x<pred.size(); x++){
-        //    std::cout << pred[x] << std::endl;
-        //}
+
     bool hayCiclo = false;
+
     for (int v = 0; v < n; v++) {
-        //std::cout << "copia" << copia[v] << "| real " << distancias[v] << std::endl;
         if (copia[v] != distancias[v]){
             hayCiclo = true;
             std::cout << "SI ";
             int h = pred[v];
             std::vector<int> recorrido;
             recorrido.push_back(v);
+
             while (h != v) {
                 recorrido.push_back(h);
                 h = pred[h];
-                //std::cout << h << std::endl;
             }
             for (int j = recorrido.size()-1; j >= 0; j--) {
                 std::cout << recorrido[j] << " ";
@@ -718,8 +579,6 @@ listAristas diff(listAristas& l1, listAristas& l2){
 				break;
 			}
 		}
-		// if(!pertenece){
-		// }
 	}
 	return res;
 }
