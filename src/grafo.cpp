@@ -67,9 +67,16 @@ void Grafo::borrar_edge(int u, int v){
 	if(u > _vertices.size()-1 || v > _vertices.size()-1){
 		return;
 	}
-	_vertices[u].erase(_vertices[u].begin()+v);
-	_vertices[v].erase(_vertices[v].begin()+u);
-
+	for(int i=0; i<_vertices[u].size(); i++) {
+        if (_vertices[u][i].id == v) {
+            _vertices[u].erase(_vertices[u].begin() + i);
+        }
+    }
+    for(int i=0; i<_vertices[v].size(); i++) {
+        if (_vertices[v][i].id == u) {
+            _vertices[v].erase(_vertices[v].begin() + i);
+        }
+    }
 }
 
 void Grafo::add_directional_edge(int u, int v, double w){
@@ -313,20 +320,18 @@ double desvio_estandard(listAristas vecinos, double promedio){
 listAristas Grafo::obtener_vecinos(int u, int v, double cant_vecinos){
     listAristas vecindad;
     for(int i=0; i<_vertices[u].size(); i++){
-        if(_vertices[u][i].id != v){
+        if(_vertices[u][i].id != v && cant_vecinos > 0){
             vecindad.push_back(std::tuple<int,int,double>(u,_vertices[u][i].id,_vertices[u][i].weight));
             cant_vecinos--;
-            if(cant_vecinos > 0){
-                listAristas vecinos_de_vecinos = obtener_vecinos(_vertices[u][i].id, u, cant_vecinos);
-                vecindad.insert(vecindad.end(), vecinos_de_vecinos.begin(), vecinos_de_vecinos.end());
-            }
+            listAristas vecinos_de_vecinos = obtener_vecinos(_vertices[u][i].id, u, cant_vecinos);
+            vecindad.insert(vecindad.end(), vecinos_de_vecinos.begin(), vecinos_de_vecinos.end());
             cant_vecinos++;
         }
     }
     return vecindad;
 }
 
-listAristas remover_inconsistentes(listAristas l, Grafo g, int ds, double f, double diametro, int mod){
+listAristas remover_inconsistentes(listAristas l, Grafo g, double ds, double f, double diametro, int mod){
 	listAristas res = l;
 	for(int i = 0; i < res.size(); i++){
 		int u = std::get<0>(res[i]);
