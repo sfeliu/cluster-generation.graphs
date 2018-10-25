@@ -23,8 +23,14 @@ int main(int argc, char** argv){
 
         //imprimir_agm(particionado);
         Grafo agm = Grafo(particionado, n);
+        listAristas res = remover_inconsistentes(particionado, agm, 2, 2, 14, 3);
+        std::vector<int> colores = descubrirConexo(res, n);
+        for(int v=0; v<n; v++){
+            std::cout<<colores[v]<<std::endl;
+        }
+
+
         //agm.imprimir();
-        listAristas res = remover_inconsistentes(particionado, agm, 3, 3, 2, 1);
         //std::ofstream file_1("/Users/pablo2martin/Downloads/algo3TP2/build/grafo2_clu_d4_f2_desvio3.csv");
         //file_1<< "x_1, " << "y_1," << "x_2, " << "y_2" << endl;
         // for(int i = 0; i < res.size(); i++){
