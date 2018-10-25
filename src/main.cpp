@@ -4,7 +4,7 @@
 int main(int argc, char** argv){
     int mode = atoi(argv[1]);
     if(mode==0) {
-        std::cout << "ingrese cantidad de puntos y sus cordenadas:" << std::endl;
+        //std::cout << "ingrese cantidad de puntos y sus cordenadas:" << std::endl;
         int n;
         std::cin >> n;
         double x, y;
@@ -19,6 +19,7 @@ int main(int argc, char** argv){
         Grafo g(coordenadas);
         listAristas particionado = g.prim();
 
+        //imprimir_agm(particionado);
         Grafo agm = Grafo(particionado, n);
         listAristas res = remover_inconsistentes(particionado, agm, 2, 2, 14, 3);
         std::vector<int> colores = descubrirConexo(res, n);
